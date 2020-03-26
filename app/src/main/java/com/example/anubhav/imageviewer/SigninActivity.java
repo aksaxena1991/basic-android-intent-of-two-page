@@ -24,7 +24,7 @@ public class SigninActivity extends AppCompatActivity {
         loginBtn = (Button) findViewById(R.id.login_btn);
         loginRegisterBtn = (Button) findViewById(R.id.login_register_btn);
         forgotPassword = (TextView) findViewById(R.id.login_forgot);
-        loginBtn.setEnabled(false);
+//        loginBtn.setEnabled(false);
         loginRegisterBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
