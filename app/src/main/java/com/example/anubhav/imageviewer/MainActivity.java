@@ -5,11 +5,19 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
+import com.gun0912.tedpermission.PermissionListener;
+import com.gun0912.tedpermission.TedPermission;
+
+import java.util.List;
+
+import android.Manifest;
 
 public class MainActivity extends AppCompatActivity {
 
     private Button letsGoBtn;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,5 +32,20 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        PermissionListener pL = new PermissionListener() {
+            @Override
+            public void onPermissionGranted() {
+                Toast.makeText(MainActivity.this, "Permission has been granted",Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onPermissionDenied(List<String> deniedPermissions) {
+                Toast.makeText(MainActivity.this, "Permission has been denied",Toast.LENGTH_SHORT).show();
+            }
+        };
+        TedPermission.with(MainActivity.this).setPermissionListener(pL).setPermissions(
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.ACCESS_FINE_LOCATION).check();
     }
 }
