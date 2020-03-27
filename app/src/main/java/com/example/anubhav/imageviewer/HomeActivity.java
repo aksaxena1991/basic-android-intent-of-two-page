@@ -1,6 +1,7 @@
 package com.example.anubhav.imageviewer;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.provider.CallLog;
@@ -9,14 +10,19 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 
 public class HomeActivity extends AppCompatActivity {
 
+    private Button logoutBtn;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,6 +40,17 @@ public class HomeActivity extends AppCompatActivity {
             TextView textView = (TextView) findViewById(R.id.list_item);
             textView.setText(getCallDetails());
         }
+
+        logoutBtn = (Button) findViewById(R.id.logoutBtn);
+        logoutBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FirebaseAuth.getInstance().signOut();
+                startActivity(new Intent(getApplicationContext(), SigninActivity.class));
+                finish();
+            }
+        });
+
     }
 
     @Override
