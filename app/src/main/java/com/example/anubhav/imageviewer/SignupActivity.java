@@ -54,7 +54,7 @@ public class SignupActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String strFirstname = fName.getText().toString().trim();
-                String strLastename = lName.getText().toString().trim();
+                String strLastname = lName.getText().toString().trim();
                 String strEmail = mail.getText().toString().trim();
                 String strPassword = pswd.getText().toString().trim();
                 String strUsername = uname.getText().toString().trim();
@@ -63,7 +63,7 @@ public class SignupActivity extends AppCompatActivity {
                     fName.setError("Firstname is empty!");
                     return;
                 }
-                if(TextUtils.isEmpty(strLastename)) {
+                if(TextUtils.isEmpty(strLastname)) {
                     lName.setError("Lastname is empty!");
                     return;
                 }
@@ -91,8 +91,10 @@ public class SignupActivity extends AppCompatActivity {
                         if(task.isSuccessful()){
                             Toast.makeText(SignupActivity.this, "Thank you for registering with us!", Toast.LENGTH_SHORT).show();
                             startActivity(new Intent(getApplicationContext(), SigninActivity.class));
+                            pBar.setVisibility(View.INVISIBLE);
                         } else {
                             Toast.makeText(SignupActivity.this, "Unable to register due to \n" + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                            pBar.setVisibility(View.INVISIBLE);
                         }
 
                     }

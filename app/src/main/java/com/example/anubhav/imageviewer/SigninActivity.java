@@ -10,8 +10,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -25,6 +28,7 @@ public class SigninActivity extends AppCompatActivity {
     private Button loginRegisterBtn;
     private ProgressBar pBar;
     private FirebaseAuth fAuth;
+    private int counter = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,6 +46,7 @@ public class SigninActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(getApplicationContext(), SignupActivity.class));
+                pBar.setVisibility(View.INVISIBLE);
 
             }
         });
@@ -53,27 +58,52 @@ public class SigninActivity extends AppCompatActivity {
             public void onClick(View v) {
 
 //                validate(username.toString(), password.toString());
-                pBar.setVisibility(View.VISIBLE);
+
                 String strUsername = username.getText().toString().trim();
                 String strPassword = password.getText().toString().trim();
 
                 if(TextUtils.isEmpty(strUsername)) {
                     username.setError("Username is empty");
+                    counter++;
                     return;
                 }
                 if(TextUtils.isEmpty(strPassword)) {
                     password.setError("Password is empty");
+                    counter++;
                     return;
                 }
 
-                fAuth.signInWithEmailAndPassword(strUsername,strPassword).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
 
-                        Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
-                        startActivity(intent);
-                    }
-                });
+
+                    fAuth.signInWithEmailAndPassword(strUsername,strPassword).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+
+                            task.addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                                @Override
+                                public void onSuccess(AuthResult authResult) {
+                                    Toast.makeText(getApplicationContext(),"Thank you for authenticating with us.", Toast.LENGTH_SHORT).show();
+                                    Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
+                                    startActivity(intent);
+
+                                }
+                            });
+                            task.addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Toast.makeText(getApplicationContext(),"Authentication has been failed due to the following reason:\n"+ e.getMessage(), Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                            task.addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                                @Override
+                                public void onComplete(@NonNull Task<AuthResult> task) {
+                                    pBar.setVisibility(View.INVISIBLE);
+                                }
+                            });
+                        }
+                    });
+
+
 
             }
         });
